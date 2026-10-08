@@ -19,9 +19,9 @@ related: []
 
 The files for the CSS 551 (Advanced 3D Computer Graphics, UW Bothell, Autumn 2026) homework, both tracks. Each assignment's page on the [course site](https://mgav-uwb.github.io/UWB-CSS-551---Advanced-3D-Computer-Graphics/homework/) states the task and the numbers a correct build reproduces.
 
-| HW | Title | Out | Due | WebGL file | Unity files |
+| HW | Title | Out | Due | WebGL file | Unity or Python files |
 | -- | ----- | --- | --- | ---------- | ----------- |
-| 1 | The loop, input, and orientation | Thu Oct 8 | Wed Oct 14 | `lib/skeletons/hw01.js` | `homework/hw01/unity/` |
+| 1 | The loop, input, and orientation | Thu Oct 8 | Wed Oct 14 | `lib/skeletons/hw01.js` | `homework/hw01/` |
 
 A new homework is added here the day it goes out: `git pull`, or download the ZIP again.
 
@@ -35,9 +35,9 @@ python3 -m http.server 8000
 
 Open <http://localhost:8000/>, pick the homework, and edit its `lib/skeletons/hwNN.js`, the only file you change. Reload to rerun the checks. A page opened from disk, without the server, stays blank because browsers do not load modules from `file://` URLs.
 
-## Unity track
+## Unity and Python tracks
 
-Create a project with the **3D (Built-In Render Pipeline)** template in editor **6000.3.11f1**, copy `homework/hwNN/unity/` into `Assets/HWNN/`, and follow the assignment page.
+The second track's files are in `homework/hwNN/`: `unity/` for HW1 to HW6, a notebook with its data for HW7 and HW8. The assignment page says where they go.
 
 ## Updates
 
