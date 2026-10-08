@@ -1,0 +1,752 @@
+/* Cockpit UI stylesheet: the ONE stylesheet every demo/deck links.
+   Every selector is namespaced under .cockpit so it can't bleed into deck
+   styles when a deck embeds a demo alongside its own CSS. */
+
+.cockpit {
+  background: #0b0c10;
+  color: #e7eaf0;
+  font: 14px/1.4 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cockpit .mat-panel {
+  border-collapse: collapse;
+  background: #14161d;
+  border: 1px solid #262a35;
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.cockpit .mat-panel td {
+  padding: 6px 10px;
+  text-align: right;
+  min-width: 3.6em;
+  border-bottom: 1px solid #1c1f28;
+}
+
+.cockpit .mat-panel tr:last-child td {
+  border-bottom: none;
+}
+
+.cockpit .row-u {
+  color: #ff7b72;
+}
+
+.cockpit .row-v {
+  color: #7ee787;
+}
+
+.cockpit .row-w {
+  color: #79c0ff;
+}
+
+.cockpit .row-h {
+  color: #8b93a7;
+}
+
+.cockpit .mat-panel td.value-label {
+  text-align: left;
+  color: #8b93a7;
+  font-weight: 600;
+}
+
+.cockpit .slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #14161d;
+  border: 1px solid #262a35;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.cockpit .slider-label {
+  font-size: 13px;
+  min-width: 2.5em;
+  color: #e7eaf0;
+}
+
+.cockpit .slider-row input[type='range'] {
+  flex: 1;
+  /* min-width:0 lets the range shrink below its ~129px UA intrinsic width so
+     the row fits the narrow rail card, without it a flex item's default
+     min-width:auto floors the range and pushes the readout past the card edge
+     (a 22px horizontal overflow in every demo's rail). */
+  min-width: 0;
+  accent-color: #5cd47a;
+}
+
+.cockpit .slider-readout {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  min-width: 3.6em;
+  text-align: right;
+  color: #8b93a7;
+}
+
+/* ButtonRow (cockpit.js): a SliderRow-shaped row (same label width/type,
+   same card-colored pill background) whose control is a group of mutually-
+   exclusive option buttons instead of a range input: the shared model
+   selector every S01 demo mounts in its rail. .btn-row-btn reuses
+   .demo-shell-btn's flat rail-button look; the pressed option's .on state
+   reuses .demo-shell-btn-home's green "this one's active" palette so the
+   two "this control is engaged" cues stay visually consistent across the
+   rail. */
+.cockpit .btn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #14161d;
+  border: 1px solid #262a35;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.cockpit .btn-row-group {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cockpit .btn-row-btn {
+  flex: 1;
+  background: #1c1f28;
+  color: #e7eaf0;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  padding: 5px 6px;
+  font: 12px/1.2 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.cockpit .btn-row-btn:hover {
+  background: #262a35;
+}
+
+.cockpit .btn-row-btn:active {
+  background: #2f3542;
+}
+
+.cockpit .btn-row-btn.on {
+  background: #17301f;
+  border-color: #2d6b46;
+  color: #7ee787;
+  font-weight: 600;
+}
+
+.cockpit .btn-row-btn.on:hover {
+  background: #1c3c27;
+}
+
+/* demo-shell: the shared scene-dominant layout every demo mounts into
+   (lib/core/demo-shell.js): a large scene viewport + a compact rail of
+   cards, with the help, settings, and legend overlays anchored to the scene
+   corners. First extracted from gsplat (still its heaviest user: the free-fly
+   camera cockpit). The overlay classes below (demo-shell-help-*,
+   demo-shell-settings-*, demo-shell-legend, demo-shell-explore,
+   demo-shell-exit) are deliberately NOT scoped under .cockpit so they render
+   in the bare embed-test fixtures too. */
+.cockpit .demo-shell-root {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.cockpit .demo-shell-scene {
+  flex: 1;
+  min-width: 0;
+  min-height: 420px;
+  position: relative;
+  background: #0b0c10;
+  border: 1px solid #262a35;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cockpit .demo-shell-scene canvas {
+  display: block;
+}
+
+.cockpit .demo-shell-rail {
+  flex: 0 0 236px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.cockpit .demo-shell-card {
+  background: #14161d;
+  border: 1px solid #262a35;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.cockpit .demo-shell-card h3 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b93a7;
+}
+
+/* Matrix / value panels inside a rail card: the rail is narrow, so a full
+   4-column Mat4Panel (e.g. the view matrix's translation column) would clip
+   with the panel's default cell padding/min-width. Compact the cells and let
+   the table use the card's full width so all columns stay visible. */
+.cockpit .demo-shell-card .mat-panel {
+  width: 100%;
+  font-size: 12px;
+}
+
+.cockpit .demo-shell-card .mat-panel td {
+  padding: 4px 5px;
+  min-width: 0;
+  /* long readout values (e.g. a BRDF formula string) wrap inside the narrow
+     rail card instead of clipping past its edge. */
+  overflow-wrap: anywhere;
+}
+
+.cockpit .demo-shell-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.cockpit .demo-shell-row:last-child {
+  margin-bottom: 0;
+}
+
+.cockpit .demo-shell-btn {
+  flex: 1;
+  background: #1c1f28;
+  color: #e7eaf0;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  padding: 5px 6px;
+  font: 12px/1.2 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.cockpit .demo-shell-btn:hover {
+  background: #262a35;
+}
+
+.cockpit .demo-shell-btn:active {
+  background: #2f3542;
+}
+
+.cockpit .demo-shell-btn-home {
+  background: #17301f;
+  border-color: #2d6b46;
+  color: #7ee787;
+  font-weight: 600;
+}
+
+.cockpit .demo-shell-btn-home:hover {
+  background: #1c3c27;
+}
+
+.cockpit .demo-shell-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #e7eaf0;
+}
+
+.cockpit .demo-shell-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.cockpit .demo-shell-field-label {
+  flex: 0 0 4.2em;
+  color: #8b93a7;
+}
+
+.cockpit .demo-shell-field-input {
+  flex: 1;
+  min-width: 0;
+  background: #0b0c10;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  color: #e7eaf0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  padding: 3px 6px;
+  text-align: right;
+}
+
+.cockpit .gsplat-viewpoint-name {
+  flex: 1;
+  min-width: 0;
+  background: #0b0c10;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  color: #e7eaf0;
+  font-size: 12px;
+  padding: 5px 6px;
+}
+
+.cockpit .gsplat-saved-list .demo-shell-btn {
+  flex: 0 0 auto;
+}
+
+.cockpit .gsplat-dash td {
+  font-size: 12px;
+}
+
+/* gsplat sandbox full-screen sizing (stage:'full' only; the bare
+   .demo-shell-root, never .demo-shell-root--embed): fill the viewport below
+   demo.html's title (measured ~58px title bottom + margin -> 90px budget)
+   so the scene viewport reads as a full working canvas, not a small inset.
+   The embed's own .demo-shell-root--embed sizing block below is untouched. */
+.cockpit .demo-shell-root:not(.demo-shell-root--embed) {
+  height: calc(100vh - 90px);
+}
+
+.cockpit .demo-shell-root:not(.demo-shell-root--embed) .demo-shell-scene {
+  height: 100%;
+  min-height: 0;
+}
+
+.cockpit .demo-shell-root:not(.demo-shell-root--embed) .demo-shell-rail {
+  height: 100%;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .cockpit .demo-shell-root {
+    flex-direction: column;
+  }
+
+  .cockpit .demo-shell-rail {
+    flex: 0 0 auto;
+  }
+
+  .cockpit .demo-shell-scene {
+    min-height: 300px;
+  }
+
+  /* Stacked layout: let the page scroll instead of forcing a fixed
+     viewport-height column (rail below a full-height scene would push
+     itself off-screen). */
+  .cockpit .demo-shell-root:not(.demo-shell-root--embed) {
+    height: auto;
+  }
+
+  .cockpit .demo-shell-root:not(.demo-shell-root--embed) .demo-shell-scene {
+    height: 420px;
+  }
+
+  .cockpit .demo-shell-root:not(.demo-shell-root--embed) .demo-shell-rail {
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+/* gsplat embed layout (Task 5, overflow fix): stage!=='full' (a deck slide,
+   or lib/_gsplat-embed-test/) renders lib/demos/gsplat.js's compact rail:
+   the FOV SliderRow + Live-dashboard cards only, NOT the View/Camera-boxes/
+   Viewpoints cockpit cards (those are gated to stage:'full' in gsplat.js
+   itself; the sandbox's plain .demo-shell-root/.demo-shell-scene/.demo-shell-rail rules
+   above are untouched). A slide budget is 700px total including the title,
+   so the embed's own footprint targets roughly 400-450px: a capped overall
+   width (so it reads as an inset teaser, not a full-bleed sandbox) and a
+   much shorter scene min-height (220px vs the sandbox's 420px): the fov
+   SliderRow + a 9-row ValueTable comfortably fit the remaining rail height
+   at that scene height. Modifier classes (not overrides of the bare
+   .demo-shell-root/.demo-shell-scene/.demo-shell-rail rules) so stage:'full' is
+   completely unaffected. */
+.cockpit .demo-shell-root--embed {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.cockpit .demo-shell-scene--embed {
+  min-height: 220px;
+}
+
+.cockpit .demo-shell-rail--embed {
+  flex: 0 0 190px;
+  gap: 8px;
+  /* Bound the embed rail so a demo with many/large cards (e.g. trs-order's
+     four Mat4Panels) scrolls internally instead of pushing the slide past
+     reveal's 700px height budget. The sandbox (stage:'full') is uncapped. */
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+/* gsplat embed activation gate (Task 4): stage!=='full' (a deck slide, or
+   lib/_gsplat-embed-test/) stays inert until this overlay is clicked, so
+   reveal.js keeps its own arrow-key/space navigation until the presenter
+   opts in, see lib/demos/gsplat.js make()'s stage!=='full' branch.
+   Deliberately NOT scoped under .cockpit (unlike the rest of this file's
+   .gsplat-* rules): the bare embed-test fixture mounts .demo-shell-scene without
+   a .cockpit-classed host, and this gate must render there too. .gsplat-
+   scene already has position:relative (see above), so these position
+   directly against it. */
+.demo-shell-explore {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px 18px;
+  background: rgba(11, 12, 16, 0.82);
+  color: #e7eaf0;
+  border: 1px solid #3a4050;
+  border-radius: 6px;
+  font: 14px/1.3 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.demo-shell-explore:hover {
+  background: rgba(20, 22, 29, 0.92);
+}
+
+/* gsplat controls legend: SANDBOX (stage:'full') ONLY, see lib/demos/
+   gsplat.js make()'s stage==='full' gate just above the InputController
+   section; never built in the embed stage. Deliberately NOT scoped under
+   .cockpit, same reasoning as .demo-shell-explore/.demo-shell-exit above (the bare
+   lib/_gsplat-embed-test/ fixture mounts .demo-shell-scene without a .cockpit
+   ancestor, though this legend never mounts there anyway, since that
+   fixture only exercises the embed stage). Anchored top-LEFT (right:72px
+   reserves the top-right corner already claimed by .demo-shell-settings-btn +
+   .demo-shell-help-btn: 8 (help) + 22 (help width) + 4 (gap) + 22 (settings
+   width) + 8 (gap) = 64, plus a few px of breathing room) so it can never
+   overlap those buttons. */
+/* Picture-in-picture slots (demo-shell.js pip:true). The big slot fills the
+   scene and is pointer-transparent (drags fall through to the nav controller);
+   the small slot is a bordered bottom-right inset that captures clicks to
+   swap. Un-scoped (like the other scene overlays) so they work in the bare
+   embed-test fixtures. z-index sits below the ?/gear/legend overlays (5–7). */
+.demo-shell-pip-slot {
+  position: absolute;
+  overflow: hidden;
+}
+
+.demo-shell-pip-slot--big {
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.demo-shell-pip-slot--small {
+  width: 34%;
+  min-width: 150px;
+  height: 34%;
+  min-height: 110px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+  border: 1px solid #3a4050;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  background: #0b0c10;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.demo-shell-pip-slot--small canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.demo-shell-pip-swap {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 4;
+  width: 20px;
+  height: 20px;
+  background: rgba(11, 12, 16, 0.85);
+  color: #c7cdda;
+  border: 1px solid #3a4050;
+  border-radius: 4px;
+  font: 12px/18px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  pointer-events: none;
+}
+
+.demo-shell-legend {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 72px;
+  padding: 4px 8px;
+  background: rgba(11, 12, 16, 0.6);
+  color: #8b93a7;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  font: 11px/1.3 'SF Mono', 'Menlo', 'Consolas', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.demo-shell-exit {
+  position: absolute;
+  top: 8px;
+  /* Shifted left of the plain 8px corner (Fix 3) to leave room for
+     .demo-shell-help-btn AND .demo-shell-settings-btn, which both claim the
+     top-right corner (in that left-to-right order: settings, help) in both
+     stages: 8 (help) + 22 (help width) + 4 (gap) + 22 (settings width) + 8
+     (gap) = 64. */
+  right: 64px;
+  padding: 3px 8px;
+  background: rgba(11, 12, 16, 0.82);
+  color: #8b93a7;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  font: 11px/1.2 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  z-index: 5;
+}
+
+/* gsplat help button + panel (Fix 3): present in BOTH stages, see
+   lib/demos/gsplat.js make(), built unconditionally (unlike the stage:
+   'full'-only cockpit cards). Deliberately NOT scoped under .cockpit, same
+   reasoning as .demo-shell-explore/.demo-shell-exit just above. */
+.demo-shell-help-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: rgba(11, 12, 16, 0.75);
+  color: #8b93a7;
+  border: 1px solid #3a4050;
+  border-radius: 50%;
+  font: 12px/20px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  z-index: 6;
+}
+
+.demo-shell-help-btn:hover {
+  background: rgba(20, 22, 29, 0.92);
+  color: #e7eaf0;
+}
+
+.demo-shell-help-panel {
+  position: absolute;
+  inset: 8px;
+  z-index: 7;
+  overflow-y: auto;
+  background: rgba(9, 10, 13, 0.97);
+  border: 1px solid #3a4050;
+  border-radius: 8px;
+  padding: 16px 20px;
+  color: #e7eaf0;
+  font: 13px/1.5 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.demo-shell-help-panel h4 {
+  margin: 14px 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #79c0ff;
+}
+
+.demo-shell-help-panel h4:first-child {
+  margin-top: 0;
+}
+
+.demo-shell-help-panel p {
+  margin: 0 0 8px;
+  color: #c7cdda;
+}
+
+/* Provenance & credits (Dataset section) is a <ul> of separately-sourced
+   claims (scene / reconstruction / viewer-author usage / license terms):
+   a list reads more accurately than one run-on paragraph. Matches
+   .demo-shell-help-panel p's color/spacing so it doesn't look like a distinct
+   component. */
+.demo-shell-help-panel ul {
+  margin: 0 0 8px;
+  padding-left: 1.1em;
+  color: #c7cdda;
+}
+
+.demo-shell-help-panel li {
+  margin-bottom: 6px;
+}
+
+.demo-shell-help-panel li:last-child {
+  margin-bottom: 0;
+}
+
+.demo-shell-help-panel code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  color: #7ee787;
+}
+
+.demo-shell-help-panel-hint {
+  margin-top: 12px !important;
+  color: #6b7280 !important;
+  font-size: 11px;
+}
+
+.demo-shell-help-panel-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #8b93a7;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.demo-shell-help-panel-close:hover {
+  color: #e7eaf0;
+}
+
+/* gsplat settings ("⚙") button + panel: same closeable-panel idiom as
+   .demo-shell-help-btn/.demo-shell-help-panel just above, see lib/demos/gsplat.js
+   make(), built unconditionally in BOTH stages. Positioned immediately left
+   of the help button (34px vs help's 8px: 8 + 22 width + 4 gap = 34) so
+   both sit in the scene's top-right corner without overlapping. Namespaced
+   .demo-shell-settings* per spec; deliberately NOT scoped under .cockpit, same
+   reasoning as .demo-shell-explore/.demo-shell-help-btn above (the bare
+   lib/_gsplat-embed-test/ fixture mounts .demo-shell-scene without a
+   .cockpit-classed ancestor). Unlike the help panel (a full inset reader),
+   this is a small anchored form (5 number fields): sized to its content
+   rather than filling the viewport. */
+.demo-shell-settings-btn {
+  position: absolute;
+  top: 8px;
+  right: 34px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: rgba(11, 12, 16, 0.75);
+  color: #8b93a7;
+  border: 1px solid #3a4050;
+  border-radius: 50%;
+  font: 13px/20px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+  z-index: 6;
+}
+
+.demo-shell-settings-btn:hover {
+  background: rgba(20, 22, 29, 0.92);
+  color: #e7eaf0;
+}
+
+.demo-shell-settings-panel {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  width: 220px;
+  max-width: calc(100% - 16px);
+  max-height: calc(100% - 44px);
+  overflow-y: auto;
+  z-index: 7;
+  background: rgba(9, 10, 13, 0.97);
+  border: 1px solid #3a4050;
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #e7eaf0;
+  font: 13px/1.5 -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.demo-shell-settings-panel h4 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #79c0ff;
+}
+
+/* Un-scoped-under-.cockpit duplicates of the .demo-shell-field* rules (lib.css's
+   originals are all `.cockpit .demo-shell-field...`) so the Settings panel's
+   number fields still render styled inside the bare embed-test fixture
+   (which has no .cockpit ancestor): every OTHER caller of bindNumberField
+   (Camera card) only ever renders inside stage:'full', which always has a
+   .cockpit ancestor, so this gap never showed up before the Settings panel
+   (present in the embed stage too) existed. */
+.demo-shell-settings-fields .demo-shell-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #e7eaf0;
+}
+
+.demo-shell-settings-fields .demo-shell-field:last-child {
+  margin-bottom: 0;
+}
+
+.demo-shell-settings-fields .demo-shell-field-label {
+  flex: 0 0 3.4em;
+  color: #8b93a7;
+}
+
+.demo-shell-settings-fields .demo-shell-field-input {
+  flex: 1;
+  min-width: 0;
+  background: #0b0c10;
+  border: 1px solid #262a35;
+  border-radius: 4px;
+  color: #e7eaf0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  padding: 3px 6px;
+  text-align: right;
+}
+
+/* "⚙" display-toggle rows (bindToggleField): a checkbox, not a number box:
+   left-align it right after the label rather than stretching it like the
+   number inputs. Un-scoped, same as the settings-field rules above. */
+.demo-shell-field--toggle {
+  justify-content: flex-start;
+}
+
+.demo-shell-field-check {
+  flex: 0 0 auto;
+  accent-color: #5cd47a;
+  cursor: pointer;
+}
+
+.demo-shell-settings-panel-hint {
+  margin: 10px 0 0 !important;
+  color: #6b7280 !important;
+  font-size: 11px;
+}
+
+.demo-shell-settings-panel-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #8b93a7;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.demo-shell-settings-panel-close:hover {
+  color: #e7eaf0;
+}
