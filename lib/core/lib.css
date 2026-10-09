@@ -750,3 +750,23 @@
 .demo-shell-settings-panel-close:hover {
   color: #e7eaf0;
 }
+
+/* Full-slide demo exhibits in the decks (<!-- .slide: class="demo-full" -->): the demo IS the
+   slide, so it takes the whole height under a small title (about 620px of reveal's 700px).
+   One definition for every lecture page; .reveal raises the specificity over older per-page
+   copies of this block. A slide whose controls are taller than the scene adds the class
+   demo-rail-2col to lay the rail's cards out in two columns. (2026-10-08: rails were being cut
+   off at 280px on plain slides and at 500-520px on full ones.) */
+.reveal section.demo-full h2 { font-size: 1.1em; margin-bottom: 8px; }
+.reveal section.demo-full [data-demo] { display: block; }
+.reveal section.demo-full [data-demo] .demo-shell-root--embed { max-width: 98%; max-height: 620px; }
+.reveal section.demo-full [data-demo] .demo-shell-scene--embed { min-height: 600px; }
+.reveal section.demo-full [data-demo] .demo-shell-rail--embed { max-height: 600px; flex: 0 0 270px; }
+.reveal section.demo-full [data-demo] .demo-viewport,
+.reveal section.demo-full [data-demo] canvas { height: 600px !important; width: auto !important; }
+.reveal section.demo-full.demo-rail-2col [data-demo] .demo-shell-rail--embed {
+  flex: 0 0 560px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 8px;
+  align-content: start; align-items: start;
+}
+.reveal section.demo-full.demo-rail-2col [data-demo] .demo-shell-root--embed { max-height: 632px; }
+.reveal section.demo-full.demo-rail-2col [data-demo] .demo-shell-rail--embed { max-height: 612px; }
