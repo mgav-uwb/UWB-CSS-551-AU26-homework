@@ -651,6 +651,34 @@
   color: #e7eaf0;
 }
 
+/* "↗" full-demo link (demo-shell.js, embeds only): the same 22px round chip as
+   "?" and "⚙", left of them; its right offset is set inline by makeShell from
+   the buttons that exist. Un-scoped like the other scene overlays; the scene
+   class in the selector outranks reveal.js's `.reveal a` (position: relative). */
+.demo-shell-scene .demo-shell-full-btn {
+  position: absolute;
+  display: block;
+  top: 8px;
+  right: 60px;
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  background: rgba(11, 12, 16, 0.75);
+  color: #8b93a7;
+  border: 1px solid #3a4050;
+  border-radius: 50%;
+  font: 13px/20px -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 6;
+}
+
+.demo-shell-scene .demo-shell-full-btn:hover {
+  background: rgba(20, 22, 29, 0.92);
+  color: #e7eaf0;
+}
+
 .demo-shell-settings-panel {
   position: absolute;
   top: 36px;
