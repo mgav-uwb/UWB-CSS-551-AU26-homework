@@ -309,8 +309,8 @@ public static class Pass
         Vector3 eye, target = center;
         switch (mode)
         {
-            case CameraMode.Tripod: eye = new Vector3(-25f, 10f, midFlight.z); target = midFlight; break;
-            case CameraMode.Pan: eye = new Vector3(-25f, 10f, midFlight.z); break;
+            case CameraMode.Tripod: eye = new Vector3(-4f, 7f, midFlight.z); target = midFlight; break;   // a sideline tower
+            case CameraMode.Pan: eye = new Vector3(-4f, 7f, midFlight.z); break;
             case CameraMode.Sideline: eye = new Vector3(-5f, 2f, center.z); break;
             case CameraMode.Chase:
                 eye = center - 2.5f * fwd + new Vector3(0f, 0.7f, 0f);
