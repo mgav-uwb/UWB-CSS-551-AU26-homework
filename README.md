@@ -39,6 +39,10 @@ Open <http://localhost:8000/>, pick the homework, and edit its `lib/skeletons/hw
 
 The second track's files are in `homework/hwNN/`: `unity/` for HW1 to HW6, a notebook with its data for HW7 and HW8. The assignment page says where they go.
 
+## A whole program: the spiral pass
+
+`lib/programs/football/` is the scene of the course's football demo, in full, for both tracks: `webgl/` (open <http://localhost:8000/lib/programs/football/webgl/> with the server running) and `unity/` (`Pass.cs`, `PassScene.cs`). The ball itself, with its texture, is in `lib/assets/models/football/` as GLB and OBJ; `FOOTBALL.md` there says how each track loads it.
+
 ## Updates
 
 This repository is regenerated from the course site; do not open pull requests against it. If a `git pull` conflicts in a file you edited, keep your version (`git checkout --ours <file>`) and ask on the Canvas board what changed.
