@@ -1,13 +1,14 @@
 ---
 title: "The football model"
-version: "1.0"
+version: "2.0"
 status: final
 created_by: "Claude"
 created_at: "2026-10-14T23:00"
 last_modified_by: "Claude"
-last_modified_at: "2026-10-14T23:00"
+last_modified_at: "2026-10-14T23:45"
 contributors:
   - "Claude"
+  - "Marcel Gavriliu"
 tags:
   - "css551"
   - "assets"
@@ -19,22 +20,31 @@ related:
     desc: "the WebGL program that loads football.glb"
   - path: "../../../programs/football/unity/PassScene.cs"
     desc: "the Unity program that places the imported football.obj"
+  - path: "../../../../tools/convert-football-blend.py"
+    desc: "the Blender script that made the GLB, OBJ and textures from BlenderFootball.blend"
 ---
 
 # The football model
 
-An NFL-size ball for both tracks: 0.28 m tip to tip, 0.17 m across the middle, in meters. It is the mesh the
-football demo draws, written out by `tools/gen-football-model.mjs` from `lib/core/football-mesh.js`; do not edit
-these files by hand.
+**Credit:** "Football" by **rnepb13**, from BlendSwap (<http://www.blendswap.com/blends/view/58039>), licensed
+**Creative Commons Attribution 3.0**. Any use must credit rnepb13; `BLENDSWAP_LICENSE.txt` is the license as it
+came with the model. Changes for this course: converted from Blender 2.63 to glTF and OBJ, its subdivision applied,
+its materials rebuilt for today's renderers, its textures resized to 1024 × 1024, and the whole ball scaled to an
+NFL ball's 0.28 m.
 
-**Its own frame:** origin at the ball's center, long axis on **+z** (forward in Unity, three.js and glTF), laces on
-**+y**. A spin is a rotation about z; aiming the nose is a rotation that takes +z onto a direction.
+**Its own frame:** origin at the ball's center, long axis on **z** (forward in Unity, three.js and glTF), laces on
+**+y**, meters: 0.28 m tip to tip, 0.162 m across. A spin is a rotation about z; aiming the nose is a rotation that
+takes +z onto a direction.
 
 | File | What it is | Use it in |
 | ---- | ---------- | --------- |
-| `football.glb` | glTF 2.0 binary: two meshes (leather, laces), the texture inside | three.js (`GLTFLoader`); Unity with the glTFast package |
-| `football.obj` + `football.mtl` | the same geometry as text, two materials | Unity (native import); three.js `OBJLoader` + `MTLLoader` |
-| `football_leather.png` | 1024 × 512 leather: u goes around the long axis, v from tip to tip; seams at u = 0, 0.25, 0.5, 0.75 | both |
+| `football.glb` | glTF 2.0 binary, everything inside: three materials (leather, white stripe, laces), 23,346 vertices | three.js (`GLTFLoader`); Unity with the glTFast package |
+| `football.obj` + `football.mtl` | the same mesh as text, the same three materials | Unity (native import); three.js `OBJLoader` + `MTLLoader` |
+| `football_albedo.jpg` | the leather's color, 1024 × 1024 | both, through the MTL |
+| `football_normal.jpg` | the pebbled grain as a normal map, 1024 × 1024 | both, through the MTL (`map_Bump`) |
+| `BlenderFootball.blend` | the original, for Blender | Blender; Unity also imports .blend when Blender is installed |
+
+The full-size textures, the Photoshop file and the downloaded archive stay in the course's private copy.
 
 ## WebGL (three.js)
 
@@ -42,7 +52,7 @@ these files by hand.
 import { GLTFLoader } from '../../../vendor/GLTFLoader.js';   // lib/vendor/, three.js r170
 
 function onLoaded(gltf) {
-  const ball = gltf.scene;           // a Group: leather and laces
+  const ball = gltf.scene;           // a Group with the ball's mesh
   ball.matrixAutoUpdate = false;     // the chain sets ball.matrix
   scene.add(ball);
 }
@@ -54,11 +64,18 @@ new GLTFLoader().load('../../../assets/models/football/football.glb', onLoaded);
 
 ## Unity
 
-Drag this folder into `Assets`. Unity imports `football.obj` with two materials, leather and laces; if the leather
-comes in plain, drop `football_leather.png` on its Albedo (Base Map). The ball is life size, so it looks small next
-to Unity's default 1 m cube. Unity's axes are left-handed: it mirrors x on import, and the ball, symmetric left to
-right, looks the same. `lib/programs/football/unity/` has `Pass.cs` and `PassScene.cs`, the same scene as the WebGL
-program.
+Drag `football.obj`, `football.mtl` and the two JPEGs into `Assets` together. Unity imports the OBJ with its three
+materials; if the leather comes in plain, drop `football_albedo.jpg` on its Albedo (Base Map) and
+`football_normal.jpg` on its Normal Map (set the texture's type to Normal map when Unity asks). The ball is life
+size, so it looks small next to Unity's default 1 m cube. `lib/programs/football/unity/` has `Pass.cs` and
+`PassScene.cs`, the same scene as the WebGL program.
+
+## Making it again
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender -b lib/assets/models/football/BlenderFootball.blend \
+    --python tools/convert-football-blend.py
+```
 
 ---
 
@@ -66,4 +83,5 @@ program.
 
 | Version | Date             | Author | Summary       |
 | ------- | ---------------- | ------ | ------------- |
+| 2.0     | 2026-10-14T23:45 | Claude | The ball is now "Football" by rnepb13 (BlendSwap, CC BY 3.0), which Marcel found, converted by tools/convert-football-blend.py; the generated ball and its PNG are retired |
 | 1.0     | 2026-10-14T23:00 | Claude | Initial: GLB, OBJ + MTL, PNG, generated by tools/gen-football-model.mjs |

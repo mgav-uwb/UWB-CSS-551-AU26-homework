@@ -16,7 +16,7 @@ public static class Pass
 {
     #region Settings
     public const float BallLength = 0.28f;
-    public const float BallRadius = 0.085f;
+    public const float BallRadius = 0.081f;
     public const float FieldWidth = 50f, FieldHeight = 40f, FieldLength = 110f;   // x across, y up, z along
 
     public const float Seattle = 9.808f, Denver = 9.797f, Moon = 1.62f, WhiteDwarf = 3.6e6f;
