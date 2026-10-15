@@ -4,18 +4,18 @@ using UnityEngine;
 // objects, then, once per frame, copies those matrices onto their Transforms. A Transform stores a
 // position, a rotation (a quaternion) and a scale, not a matrix, so each matrix is taken apart into the
 // first two (our matrices have no scale) and Unity rebuilds localToWorldMatrix from them.
-// Setup: import lib/assets/models/football/ (football.obj, .mtl and the two JPEGs) and, if you want the stadium,
-// lib/assets/models/stadium/ (stadium.obj, .mtl and its JPEGs) into Assets; put this script on an empty
-// GameObject, drag the football onto Football Prefab and the stadium onto Stadium Prefab, and press Play.
-// Models: "Football" by rnepb13 and "Soccer and American football stadium" by ericchip1983, both from
-// BlendSwap under CC BY 3.0. Shadows come from the scene's Directional Light (on by default).
+// Setup: import lib/assets/models/football/ (football.obj, .mtl and the two JPEGs) and
+// lib/assets/models/field/huskies_field.jpg into Assets; put this script on an empty GameObject, drag the
+// football onto Football Prefab and the field drawing onto Field Texture, and press Play.
+// Models: "Football" by rnepb13 (BlendSwap, CC BY 3.0); the field, a drawing of the Husky Stadium field.
+// Shadows come from the scene's Directional Light (on by default).
 // Keys: 1 to 9 pick a shot camera, B the ball it watches, G the gravity, Space pauses, R restarts
 // (the Input Manager: Project Settings > Player > Active Input Handling, "Both" or "Input Manager (Old)").
 // The same scene, step for step, is scene.js in ../webgl/.
 public class PassScene : MonoBehaviour
 {
     public GameObject footballPrefab;
-    public GameObject stadiumPrefab;   // optional
+    public Texture2D fieldTexture;     // optional: plain grass without it
 
     #region Objects and state
     Transform field, cart;
@@ -40,14 +40,10 @@ public class PassScene : MonoBehaviour
     {
         field = new GameObject("field").transform;   // everything in field coordinates is its child; its placement is F
         BuildBox();
+        BuildFieldDrawing();
+        BuildGoalposts();
         BuildCart();
         for (int i = 0; i < 3; i++) balls[i] = Instantiate(footballPrefab, field).transform;
-        if (stadiumPrefab != null)
-        {
-            // authored with the field's center at its origin and its long axis on z: one translation places it
-            Transform stadium = Instantiate(stadiumPrefab, field).transform;
-            stadium.localPosition = new Vector3(Pass.FieldWidth / 2f, 0f, Pass.FieldLength / 2f);
-        }
 
         shotCamera = Camera.main != null ? Camera.main : new GameObject("shot camera").AddComponent<Camera>();
         shotCamera.transform.SetParent(field, false);  // placed by C, in field coordinates
@@ -57,8 +53,8 @@ public class PassScene : MonoBehaviour
     }
     #endregion
 
-    #region The field: a see-through coordinate box whose near walls are culled
-    /// a texture with one grid cell: a faint (or no) fill, a light border; repeated once per 10 m
+    #region The field: a coordinate box whose near walls are culled, over the field drawing
+    /// a texture with one grid cell: a fill (clear for the floor), a border; repeated once per 10 m
     static Texture2D GridTexture(Color fill, Color line)
     {
         Texture2D tex = new Texture2D(128, 128);
@@ -70,7 +66,8 @@ public class PassScene : MonoBehaviour
         return tex;
     }
 
-    /// an unlit, alpha-blended material that does not write depth, so the stadium behind it shows
+    /// an unlit, alpha-blended material that does not write depth: the floor's texture is clear but for its
+    /// lines, so the field drawing shows through it
     static Material SeeThrough(Texture2D tex, Vector2 tiling)
     {
         Material mat;
@@ -112,14 +109,56 @@ public class PassScene : MonoBehaviour
     void BuildBox()
     {
         float W = Pass.FieldWidth, H = Pass.FieldHeight, L = Pass.FieldLength;
-        Color floor = new Color(0f, 0f, 0f, 0f), floorLine = new Color(0.95f, 0.96f, 0.93f, 0.5f);
-        Color wall = new Color(0.08f, 0.10f, 0.15f, 0.08f), wallLine = new Color(0.66f, 0.74f, 0.88f, 0.65f);
+        Color floor = new Color(0f, 0f, 0f, 0f), floorLine = new Color(0.66f, 0.74f, 0.88f, 0.45f);
+        Color wall = new Color(0.08f, 0.10f, 0.15f), wallLine = new Color(0.24f, 0.30f, 0.42f);
         AddWall(W, L, new Vector3(W / 2f, 0.03f, L / 2f), new Vector3(90f, 0f, 0f), floor, floorLine);   // floor, 3 cm up, faces +y
         AddWall(W, L, new Vector3(W / 2f, H, L / 2f), new Vector3(-90f, 0f, 0f), wall, wallLine);    // ceiling, faces -y
         AddWall(L, H, new Vector3(0f, H / 2f, L / 2f), new Vector3(0f, -90f, 0f), wall, wallLine);   // x = 0, faces +x
         AddWall(L, H, new Vector3(W, H / 2f, L / 2f), new Vector3(0f, 90f, 0f), wall, wallLine);     // x = W, faces -x
         AddWall(W, H, new Vector3(W / 2f, H / 2f, 0f), new Vector3(0f, 180f, 0f), wall, wallLine);   // z = 0, faces +z
         AddWall(W, H, new Vector3(W / 2f, H / 2f, L), Vector3.zero, wall, wallLine);                 // z = L, faces -z
+    }
+
+    /// the Husky Stadium field drawing on the ground, sized and placed so its end lines and sidelines fall on
+    /// the real ones, 109.73 m by 48.77 m around (25, 0, 55): 123.14 m along z by 73.22 m along x. A Quad shows
+    /// its texture's width along its own x and its height along its own y, and faces its -z. LookRotation puts
+    /// its +z down (so it faces up) and its +y toward -x; its +x then runs along +z. (Unity's axes are
+    /// left-handed, so the drawing's top edge goes toward -x here and toward +x in the WebGL scene: both read
+    /// unmirrored from above.)
+    void BuildFieldDrawing()
+    {
+        GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Destroy(ground.GetComponent<Collider>());
+        ground.transform.SetParent(field, false);
+        ground.transform.localPosition = new Vector3(24.863f, 0f, 54.384f);
+        ground.transform.localRotation = Quaternion.LookRotation(Vector3.down, Vector3.left);
+        ground.transform.localScale = new Vector3(123.138f, 73.223f, 1f);
+        Shader lit = Shader.Find("Universal Render Pipeline/Lit");
+        if (lit == null) lit = Shader.Find("Standard");                // the built-in render pipeline
+        Material mat = new Material(lit);
+        if (fieldTexture != null) mat.mainTexture = fieldTexture;
+        else mat.color = new Color(0.25f, 0.42f, 0.18f);
+        ground.GetComponent<MeshRenderer>().material = mat;
+    }
+
+    /// a goalpost on each end line (z = 55 -/+ 54.865): one post up the middle to the crossbar, 3.05 m up, and
+    /// two uprights 5.64 m apart rising 9.14 m above it. (A real one stands on a curved arm whose base is behind
+    /// the end line; a straight post keeps it inside the box.) A Cylinder primitive is 2 m tall and 1 m across.
+    void BuildGoalposts()
+    {
+        Color paint = new Color(1f, 0.83f, 0f);
+        float[] endLines = { 55f - 54.865f, 55f + 54.865f };
+        float[] uprights = { -5.64f / 2f, 5.64f / 2f };
+        foreach (float z in endLines)
+        {
+            Transform goal = new GameObject("goalpost").transform;
+            goal.SetParent(field, false);
+            goal.localPosition = new Vector3(Pass.FieldWidth / 2f, 0f, z);
+            Part(PrimitiveType.Cylinder, goal, new Vector3(0f, 3.05f / 2f, 0f), Vector3.zero, new Vector3(0.24f, 3.05f / 2f, 0.24f), paint);
+            Part(PrimitiveType.Cylinder, goal, new Vector3(0f, 3.05f, 0f), new Vector3(0f, 0f, 90f), new Vector3(0.14f, 5.64f / 2f, 0.14f), paint);
+            foreach (float x in uprights)
+                Part(PrimitiveType.Cylinder, goal, new Vector3(x, 3.05f + 9.14f / 2f, 0f), Vector3.zero, new Vector3(0.12f, 9.14f / 2f, 0.12f), paint);
+        }
     }
     #endregion
 
