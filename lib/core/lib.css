@@ -86,6 +86,37 @@
   color: #8b93a7;
 }
 
+/* An angle slider's readout is a text box (SliderRow `typed`): type a value,
+   Enter applies it. Same type and color as the plain readout, in the
+   number-field box of the settings panel; about the plain readout's width
+   (it may shrink to it) so the range keeps its share of a narrow rail. */
+.cockpit input.slider-readout-typed {
+  box-sizing: border-box;
+  flex: 0 1 auto;
+  width: 4.6em;
+  min-width: 3.6em;
+  margin: 0;
+  padding: 2px 4px;
+  background: #0b0c10;
+  border: 1px solid #2f3442;
+  border-radius: 4px;
+  color: #c9d1e0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.cockpit input.slider-readout-typed:hover {
+  border-color: #46506a;
+}
+
+.cockpit input.slider-readout-typed:focus {
+  outline: none;
+  border-color: #5cd47a;
+  color: #e7eaf0;
+}
+
 /* ButtonRow (cockpit.js): a SliderRow-shaped row (same label width/type,
    same card-colored pill background) whose control is a group of mutually-
    exclusive option buttons instead of a range input: the shared model
