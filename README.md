@@ -23,7 +23,7 @@ The files for the CSS 551 (Advanced 3D Computer Graphics, UW Bothell, Autumn 202
 | -- | ----- | --- | --- | ---------- | ----------- |
 | 1 | The loop, input, and orientation | Thu Oct 8 | Wed Oct 14 | `lib/skeletons/hw01.js` | `homework/hw01/` |
 | 2 | Vector geometry (EX1 to EX6) | Thu Oct 15 | Wed Oct 28 (extended from Oct 21) | `lib/skeletons/hw02.js` | `homework/hw02/` |
-| 3 | Affine transformations and scene graphs | Thu Oct 22 | Wed Oct 28 | `lib/skeletons/hw03.js` | `homework/hw03/` |
+| 3 | Scene graphs, by operators and by matrices | Tue Oct 27 | Wed Nov 4 | `lib/skeletons/hw03.js` | `homework/hw03/` |
 
 A new homework is added here the day it goes out: `git pull`, or download the ZIP again.
 
