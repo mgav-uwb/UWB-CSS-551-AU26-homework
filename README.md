@@ -1,11 +1,11 @@
 ---
 title: "CSS 551 Homework Starter"
-version: "1.3"
+version: "1.4"
 status: final
 created_by: "Marcel Gavriliu"
 created_at: "2026-10-08T21:00"
 last_modified_by: "Claude"
-last_modified_at: "2026-11-03T21:00"
+last_modified_at: "2026-11-10T21:00"
 contributors:
   - "Marcel Gavriliu"
   - "Claude"
@@ -25,6 +25,7 @@ The files for the CSS 551 (Advanced 3D Computer Graphics, UW Bothell, Autumn 202
 | 2 | Vector geometry (EX1 to EX6) | Thu Oct 15 | Wed Oct 28 (extended from Oct 21) | `lib/skeletons/hw02.js` | `homework/hw02/` |
 | 3 | Scene graphs, by operators and by matrices | Tue Oct 27 | Wed Nov 4 | `lib/skeletons/hw03.js` | `homework/hw03/` |
 | 4 | Viewing and rasterization | Tue Nov 3 | Wed Nov 11 | `lib/skeletons/hw04.js` | `homework/hw04/` |
+| 5 | Meshes, texture placement, and a lit shader | Tue Nov 10 | Wed Nov 18 | `lib/skeletons/hw05.js` | `homework/hw05/` |
 
 A new homework is added here the day it goes out: `git pull`, or download the ZIP again.
 
@@ -56,6 +57,7 @@ This repository is regenerated from the course site; do not open pull requests a
 
 | Version | Date | Author | Summary |
 | ------- | ---- | ------ | ------- |
+| 1.4 | 2026-11-10T21:00 | Claude | HW05 released |
 | 1.3 | 2026-11-03T21:00 | Claude | HW04 released |
 | 1.2 | 2026-10-29T21:00 | Claude | HW03 released |
 | 1.1 | 2026-10-18T21:00 | Claude | HW02 released |
